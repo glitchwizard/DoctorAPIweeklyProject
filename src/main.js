@@ -28,7 +28,6 @@ function filterFunction() {
 
 $(document).ready(function () {
   let jsonResponse;
-  let jsonDocResponse;
 
   $('#triggerAPI').click(function (event) {
     let promise = API.returnSymptomResponse()
@@ -65,16 +64,20 @@ $(document).ready(function () {
 
   $('#doctorSearchButton').click(function () {
     let queryInput = $('#mySymptomInput').val();
-    let promise = API.returnDoctorResponse(queryInput);
-    promise.then(function (response) {
-      jsonDocResponse = JSON.parse(response);
-      $('#doctorResult').text('');
-      console.log('click caught');
-      for (var doctorIndex = 0; doctorIndex < 10; doctorIndex++) {
-        $('#doctorResult').append(`<p class='doctorSearchResult' id='${jsonDocResponse.data[doctorIndex].uid}'>${jsonDocResponse.data[doctorIndex].profile.first_name} ${jsonDocResponse.data[doctorIndex].profile.last_name} </p>`);
-      }
-    });
+    Doctor.returnDoctorFromQuery(queryInput);
   })
+
+  $('#doctorSearchButton').click(function () {
+    let queryInput = $('#mySymptomInput').val();
+    Doctor.returnDoctorFromQuery(queryInput);
+  })
+
+  $('#mySymptomInput').on('keypress', function (e) {
+    if (e.which == 13) {
+      let queryInput = $('#mySymptomInput').val();
+      Doctor.returnDoctorFromQuery(queryInput);
+    }
+  });
 });
 
 
