@@ -10,7 +10,8 @@ function openSymptomSearch() {
 }
 
 function filterFunction() {
-  var input, filter, ul, li, a, i;
+  console.log("filter working");
+  var input, filter, a, i, div, txtValue;
   input = document.getElementById("myInput");
   filter = input.value.toUpperCase();
   div = document.getElementById("myDropdown");
@@ -27,53 +28,53 @@ function filterFunction() {
 
 $(document).ready(function () {
   let jsonResponse;
-
-  let promise = API.returnSymptomResponse()
-  promise.then(function (response) {
-    jsonResponse = JSON.parse(response);
-    console.log('json response done');
-    console.log(jsonResponse);
-  });
-
-  $('#symptomSearchButton').click(function () {
-    let dataNum = jsonResponse.data.length;
-    for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
-      $('#searchList').append(`<p>${jsonResponse.data[symptomIndex].name}</p>`);
-      //$('#testList').append(`<li>${jsonResponse.data[symptomIndex].name}</li>`);
-    }
-    console.log('searchButton');
-    openSymptomSearch();
-    $('input#myInput').keyup(function () {
-      filterFunction();
-
-    });
-  });
-
-
-
+  let jsonDocResponse;
 
   $('#triggerAPI').click(function (event) {
     let promise = API.returnSymptomResponse()
     promise.then(function (response) {
-      let jsonResponse = JSON.parse(response);
-      console.log('response data');
-      console.log(JSON.parse(response).data);
+      jsonResponse = JSON.parse(response);
+      let dataNum = jsonResponse.data.length;
+      for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
+        $('#searchList').append(`<p class='symptomSearchResult' id='${jsonResponse.data[symptomIndex].name}'>${jsonResponse.data[symptomIndex].name}</p>`);
+      }
     });
 
-
-
-    const getElements = function (response) {
-      console.log(response)
-    }
-
-    const printThing = function(response) {
-      let dataNum = response.data.length;
-      for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
-          console.log(response.data[symptomIndex].name);
-        $('input#myInput').append(`<p>${response.data[symptomIndex].name}</p>`);
-        $('#testList').append(`<li>${response.data[symptomIndex].name}</li>`);
-      }
-    }
-
   });
+
+  //let promise = API.returnSymptomResponse()
+  //promise.then(function (response) {
+  //  jsonResponse = JSON.parse(response);
+  //  let dataNum = jsonResponse.data.length;
+  //  for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
+  //    $('#searchList').append(`<p class='symptomSearchResult' id='${jsonResponse.data[symptomIndex].uid}'>${jsonResponse.data[symptomIndex].name}</p>`);
+  //  }
+  //});
+
+  $('#myInput').keyup(function () {
+    filterFunction();
+  });
+
+  $("#searchList").click(function () {
+    console.log($('.symptomSearchResult').attr('id'));
+  });
+
+  $('#symptomSearchButton').click(function () {
+    openSymptomSearch();
+  });
+
+  $('#doctorSearchButton').click(function () {
+    let queryInput = $('#mySymptomInput').val();
+    let promise = API.returnDoctorResponse(queryInput);
+    promise.then(function (response) {
+      jsonDocResponse = JSON.parse(response);
+      $('#doctorResult').text('');
+      console.log('click caught');
+      for (var doctorIndex = 0; doctorIndex < 10; doctorIndex++) {
+        $('#doctorResult').append(`<p class='doctorSearchResult' id='${jsonDocResponse.data[doctorIndex].uid}'>${jsonDocResponse.data[doctorIndex].profile.first_name} ${jsonDocResponse.data[doctorIndex].profile.last_name} </p>`);
+      }
+    });
+  })
 });
+
+
