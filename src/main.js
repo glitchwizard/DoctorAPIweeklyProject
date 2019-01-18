@@ -26,30 +26,54 @@ function filterFunction() {
 }
 
 $(document).ready(function () {
+  let jsonResponse;
+
+  let promise = API.returnSymptomResponse()
+  promise.then(function (response) {
+    jsonResponse = JSON.parse(response);
+    console.log('json response done');
+    console.log(jsonResponse);
+  });
+
+  $('#symptomSearchButton').click(function () {
+    let dataNum = jsonResponse.data.length;
+    for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
+      $('#searchList').append(`<p>${jsonResponse.data[symptomIndex].name}</p>`);
+      //$('#testList').append(`<li>${jsonResponse.data[symptomIndex].name}</li>`);
+    }
+    console.log('searchButton');
+    openSymptomSearch();
+    $('input#myInput').keyup(function () {
+      filterFunction();
+
+    });
+  });
+
 
 
 
   $('#triggerAPI').click(function (event) {
     let promise = API.returnSymptomResponse()
-      promise.then(function (response) {
+    promise.then(function (response) {
+      let jsonResponse = JSON.parse(response);
       console.log('response data');
       console.log(JSON.parse(response).data);
     });
 
 
 
-    //const getElements = function (response) {
-    //  console.log(response)
-    //}
+    const getElements = function (response) {
+      console.log(response)
+    }
 
-    //const printThing = function(response) {
-    //  let dataNum = response.data.length;
-    //  for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
-    //      console.log(response.data[symptomIndex].name);
-    //    $('input#myInput').append(`<p>${response.data[symptomIndex].name}</p>`);
-    //    $('#testList').append(`<li>${response.data[symptomIndex].name}</li>`);
-    //  }
-    //}
+    const printThing = function(response) {
+      let dataNum = response.data.length;
+      for (var symptomIndex = 0; symptomIndex < 10; symptomIndex++) {
+          console.log(response.data[symptomIndex].name);
+        $('input#myInput').append(`<p>${response.data[symptomIndex].name}</p>`);
+        $('#testList').append(`<li>${response.data[symptomIndex].name}</li>`);
+      }
+    }
 
   });
 });
