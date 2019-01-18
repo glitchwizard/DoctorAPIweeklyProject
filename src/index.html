@@ -1,20 +1,63 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>DoctorAPIweeklyProject</title>
-  </head>
-  <body>
-      <nav class="navbar navbar-default navbar-static-top">
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top">
         <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">DoctorAPIweeklyProject</a>
-
-          </div>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">DoctorAPIweeklyProject</a>
+            </div>
         </div>
-      </nav>
+    </nav>
 
-      <div id="displayMessage">
+    <div class="dropdown">
+        <button onclick="symptomSearch()" class="dropbtn">Dropdown</button>
+        <div id="symptomInputDropdown" class="dropdown-content">
+            <input type="text" placeholder="Search.." id="symptomInput" onkeyup="symptomFilterFunction()">
+            <a href="#about">About</a>
+            <a href="#base">Base</a>
+            <a href="#blog">Blog</a>
+            <a href="#contact">Contact</a>
+            <a href="#custom">Custom</a>
+            <a href="#support">Support</a>
+            <a href="#tools">Tools</a>
+        </div>
+    </div>
 
-      </div>
-  </body>
+    <div class="healthIssue">
+        <input type="text" id="symptomInput" onkeyup="symptomSearch()" placeholder="Search for symptoms...">
+
+        <ul id="symptomList"></ul>
+        <select id="healthIssueList" class="healthIssueList">
+            <option value="value">text</option>
+        </select>
+    </div>
+
+    <button id="triggerAPI" type="button" name="triggerAPI">Run Test</button>
+    <ul id="testAPIlist"></ul>
+
+    <script>
+        function myFunction() {
+            // Declare variables
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById('myInput');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName('li');
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
 </html>
