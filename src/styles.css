@@ -2,6 +2,11 @@ body {
     background-color: #ddd;
 }
 
+.docSearchResult {
+    border-color: black;
+    border-width: 3px;
+}
+
 .glyphicon {
     font-size: 40px;
 }
