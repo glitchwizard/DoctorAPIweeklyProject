@@ -10,34 +10,40 @@ function returnDoctorFromSymptomQuery(query) {
   let promise = API.returnDoctorResponse(query);
   promise.then(function (response) {
     jsonDocResponse = JSON.parse(response);
-    $('#doctorResult').text('');
+    if (jsonDocResponse.data.length == 0) {
+      $('#doctorResult').text('');
+      $('#doctorResult').append('<p><h5>Sorry, but there are no results for that query</h5></p>');
+    } else {
+      $('#doctorResult').text('');
 
-    for (var doctorIndex = 0; doctorIndex <= jsonDocResponse.data.length - 1; doctorIndex++) {
-      let currentDoctor = jsonDocResponse.data[doctorIndex];
-      $('#doctorResult').append(`<hr /><div class=docSearchResult">`);
+      for (var doctorIndex = 0; doctorIndex <= jsonDocResponse.data.length - 1; doctorIndex++) {
+        let currentDoctor = jsonDocResponse.data[doctorIndex];
+        $('#doctorResult').append(`<hr /><div class=docSearchResult">`);
 
-      $('#doctorResult').append(`<p class='doctorSearchResult' id='${currentDoctor.uid}'><h3>${currentDoctor.profile.first_name} ${currentDoctor.profile.last_name}</h3></p><p><strong>Practice:</strong> ${currentDoctor.practices[0].name}</p><p><strong>Address:</strong> ${currentDoctor.practices[0].visit_address.street} ${currentDoctor.practices[0].visit_address.street2}</p><p>${currentDoctor.practices[0].visit_address.city} ${currentDoctor.practices[0].visit_address.state},${currentDoctor.practices[0].visit_address.zip}<p>`);
+        $('#doctorResult').append(`<p class='doctorSearchResult' id='${currentDoctor.uid}'><h3>${currentDoctor.profile.first_name} ${currentDoctor.profile.last_name}</h3></p><p><strong>Practice:</strong> ${currentDoctor.practices[0].name}</p><p><strong>Address:</strong> ${currentDoctor.practices[0].visit_address.street} ${currentDoctor.practices[0].visit_address.street2}</p><p>${currentDoctor.practices[0].visit_address.city} ${currentDoctor.practices[0].visit_address.state},${currentDoctor.practices[0].visit_address.zip}<p>`);
 
-      if (currentDoctor.practices[0].website != undefined) {
-        $('#doctorResult').append(`<p> Website: <a href="${currentDoctor.practices[0].website}">${currentDoctor.practices[0].website}</a></p>`)
-      }
-
-      for (var currentPhoneIndex = 0; currentPhoneIndex < currentDoctor.practices[0].phones.length; currentPhoneIndex++) {
-        if (currentDoctor.practices[0].phones[currentPhoneIndex].type == 'landline') {
-          $('#doctorResult').append(`<p><strong>Phone Number:</strong>${currentDoctor.practices[0].phones[currentPhoneIndex].number}</p>`)
+        if (currentDoctor.practices[0].website != undefined) {
+          $('#doctorResult').append(`<p> Website: <a href="${currentDoctor.practices[0].website}">${currentDoctor.practices[0].website}</a></p>`)
         }
+
+        for (var currentPhoneIndex = 0; currentPhoneIndex < currentDoctor.practices[0].phones.length; currentPhoneIndex++) {
+          if (currentDoctor.practices[0].phones[currentPhoneIndex].type == 'landline') {
+            $('#doctorResult').append(`<p><strong>Phone Number:</strong>${currentDoctor.practices[0].phones[currentPhoneIndex].number}</p>`)
+          }
+        }
+
+        if (currentDoctor.practices[0].accepts_new_patients == true) {
+          $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>Yes</p>`);
+        } else if (currentDoctor.practices[0].accepts_new_patients == false) {
+          $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>No</p>`);
+        } else {
+          $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>Unknown</p>`)
+        }
+
+
+        $('#doctorResult').append(`</div>`)
       }
 
-      if (currentDoctor.practices[0].accepts_new_patients == true) {
-        $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>Yes</p>`);
-      } else if (currentDoctor.practices[0].accepts_new_patients == false) {
-        $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>No</p>`);
-      } else {
-        $('#doctorResult').append(`<p><strong>Accepting new patients: </strong>Unknown</p>`)
-      }
-
-
-      $('#doctorResult').append(`</div>`)
     }
   });
 }
